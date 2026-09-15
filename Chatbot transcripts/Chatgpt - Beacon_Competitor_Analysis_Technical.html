@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Swym Beacon — Competitive Analysis</title>
+<style>
+  :root { --bg:#0b1020; --panel:#121a2d; --panel2:#18233b; --text:#edf2f7; --muted:#a9b4c7; --line:#2b3853; --accent:#7dd3fc; --accent2:#a7f3d0; --warn:#fcd34d; }
+  *{box-sizing:border-box} body{margin:0;background:linear-gradient(135deg,#080d19,#101a31);color:var(--text);font:16px/1.55 Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+  .wrap{max-width:1180px;margin:auto;padding:44px 28px 80px}.hero{padding:42px;border:1px solid var(--line);background:rgba(18,26,45,.82);border-radius:24px;box-shadow:0 18px 60px #0005}
+  .eyebrow{color:var(--accent);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:13px}.hero h1{font-size:48px;line-height:1.05;margin:10px 0}.hero p{color:var(--muted);font-size:19px;max-width:850px}
+  h2{font-size:30px;margin:58px 0 18px} h3{margin:0 0 8px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}.card p,.card li{color:var(--muted)}
+  .pill{display:inline-block;border:1px solid #35506c;border-radius:999px;padding:5px 10px;color:var(--accent);font-size:12px;margin:3px 4px 3px 0}
+  table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  th,td{padding:13px 14px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top} th{background:var(--panel2);color:#fff} td{color:var(--muted)} tr:last-child td{border-bottom:0}
+  .callout{border-left:4px solid var(--accent);background:#10243a;padding:20px 22px;border-radius:10px;margin:20px 0}.callout strong{color:#fff}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:22px 0}.node{background:var(--panel2);border:1px solid var(--line);padding:14px 16px;border-radius:12px;flex:1;min-width:150px;text-align:center}.arrow{color:var(--accent);font-size:24px}
+  pre{background:#070b14;border:1px solid var(--line);border-radius:14px;padding:20px;overflow:auto;color:#dbeafe}
+  .quote{font-size:24px;line-height:1.35;color:#fff;padding:25px;background:linear-gradient(90deg,#17304b,#132338);border-radius:16px;border:1px solid #34506c}
+  .source{font-size:12px;color:#8190a8;margin-top:8px}.footer{margin-top:60px;color:#71809a;font-size:13px}
+  @media(max-width:800px){.grid{grid-template-columns:1fr}.hero h1{font-size:36px}.flow{display:block}.node{margin:8px 0}.arrow{display:block;text-align:center}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<section class="hero">
+  <div class="eyebrow">Technical Team Presentation · Swym Swym Beacon</div>
+  <h1>From Shopper Intent to Merchant Intelligence</h1>
+  <p>A competitive analysis and product thesis for Swym Beacon: how Swym can evolve explicit shopper-intent signals into prioritized merchant decisions.</p>
+  <div><span class="pill">Intent Intelligence</span><span class="pill">Shopify ecosystem</span><span class="pill">Merchant workflows</span><span class="pill">Defensibility</span></div>
+</section>
+
+<h2>1. Competitive positioning</h2>
+<div class="card" style="overflow:auto">
+<pre style="font-size:16px;line-height:1.35;margin:0">
+                    MERCHANT DECISION
+                          ↑
+                          |
+          Bloomreach     |       SWYM BEACON
+          Nosto          |          ★
+                          |
+     Triple Whale        |
+                          |
+─────────────────────────┼────────────────────→
+ Passive / inferred      |       Explicit
+ shopper signals         |       intent signals
+                          |
+     Shopify              |   Swish
+     Sidekick             |   SToQ
+                          |   Growave
+                          |
+                    SHOPPER ACTION
+</pre>
+</div>
+
+<h2>2. Executive thesis</h2>
+<div class="quote">Swym Beacon should not be positioned as another analytics dashboard or generic AI copilot. Its differentiated job is to turn fragmented, explicit shopper-intent signals into prioritized merchant decisions.</div>
+<p>The assignment defines Swym Beacon as Swym's merchant intelligence layer that converts shopping intent into actionable insights, and asks how natural-language merchant questions can be answered from intent data. fileciteturn0file0L2-L6 fileciteturn0file0L15-L18</p>
+
+<h2>3. Competitive landscape</h2>
+<table>
+<tr><th>Category</th><th>Representative competitors</th><th>Primary job</th><th>Swym Beacon opportunity</th></tr>
+<tr><td>Wishlist / intent capture</td><td>Swish / Wishlist King, Growave, Wishlist Hero</td><td>Capture product interest and re-engage shoppers</td><td>Aggregate signals and turn them into merchant decisions</td></tr>
+<tr><td>Back-in-stock / demand</td><td>SToQ, Notify Me, Amp</td><td>Capture out-of-stock demand and notify shoppers</td><td>Quantify unmet demand and prioritize inventory decisions</td></tr>
+<tr><td>Personalization / search</td><td>Bloomreach, Algolia, Nosto, Rebuy</td><td>Use behavior to optimize the shopper experience</td><td>Shift from “what should this shopper see?” to “what is demand telling the merchant?”</td></tr>
+<tr><td>Merchant intelligence / AI</td><td>Shopify Sidekick, Triple Whale, Daasity</td><td>Analyze commerce/business data and assist merchants</td><td>Own explicit intent as a differentiated input layer</td></tr>
+</table>
+
+<h2>4. Direct competitor lenses</h2>
+<div class="grid">
+<div class="card"><h3>Swish / Wishlist King</h3><p><b>Threat:</b> direct overlap around wishlist capture and re-engagement.</p><p><b>Swym Beacon angle:</b> go beyond “people saved this product” to “what does the aggregate pattern of saves, availability and behavior imply about demand?”</p></div>
+<div class="card"><h3>SToQ</h3><p><b>Threat:</b> back-in-stock, preorder/waitlist and demand capture.</p><p><b>Swym Beacon angle:</b> move from notification infrastructure to merchant prioritization: which unmet-demand opportunities matter most?</p></div>
+<div class="card"><h3>Bloomreach</h3><p><b>Threat:</b> sophisticated behavioral data, search, merchandising and personalization.</p><p><b>Swym Beacon angle:</b> Bloomreach primarily optimizes the shopper experience; Swym Beacon can aggregate explicit intent into merchant intelligence.</p></div>
+<div class="card"><h3>Rebuy</h3><p><b>Threat:</b> search, recommendations and merchandising tied closely to Shopify.</p><p><b>Swym Beacon angle:</b> distinguish “change what the shopper sees” from “understand what shoppers collectively want.”</p></div>
+<div class="card"><h3>Shopify Sidekick</h3><p><b>Threat:</b> native store data, natural-language queries and merchant actions.</p><p><b>Swym Beacon angle:</b> generic merchant AI is not the moat; Swym's explicit intent data and downstream feedback loop can be.</p></div>
+<div class="card"><h3>Triple Whale</h3><p><b>Threat:</b> strong merchant analytics and AI around business performance.</p><p><b>Swym Beacon angle:</b> answer “what are shoppers telling me?” rather than only “how did my business perform?”</p></div>
+</div>
+
+<h2>5. The positioning gap</h2>
+<div class="flow">
+<div class="node"><b>Analytics</b><br>What happened?</div><div class="arrow">→</div>
+<div class="node"><b>Intelligence</b><br>Why / what does it mean?</div><div class="arrow">→</div>
+<div class="node"><b>Action</b><br>What should I do?</div>
+</div>
+<div class="callout"><strong>Swym Beacon opportunity:</strong> connect all three around explicit shopper intent. The product should produce an opinionated recommendation, not just expose another metric.</div>
+
+<h2>6. Example: “Which products should I restock first?”</h2>
+<pre>
+Raw signals
+  wishlist adds + back-in-stock requests + saves + repeat engagement
+        ↓
+Intent aggregation
+  demand volume + growth + product/variant affinity + recency
+        ↓
+Business context
+  inventory + price + catalog + historical conversion
+        ↓
+Swym Beacon reasoning
+  unmet demand × urgency × confidence × expected value
+        ↓
+Merchant recommendation
+  “Prioritize Product A. It has 3× the unmet-demand signal of Product B.”
+        ↓
+Outcome feedback
+  restock → observe conversion / revenue → improve future recommendations
+</pre>
+<p>The assignment explicitly asks candidates to detail how natural-language questions such as “Which products should I restock first?” could be answered from intent data, including failure modes and safeguards at 50,000-store scale. fileciteturn0file0L15-L18</p>
+
+<h2>7. A killer Part 1 demo</h2>
+<div class="card">
+<h3>Intent Opportunity Detector</h3>
+<p>Rather than build a generic dashboard, build a small executable tool that takes public store data and produces ranked opportunities.</p>
+<pre>
+BEACON — INTENT OPPORTUNITY
+
+HIGH PRIORITY
+“waterproof hiking jacket”
+
+Searches:          284
+Search → Product:  61%
+Add-to-cart:       4.2%
+Purchase:          1.1%
+
+Signal
+High interest, low conversion.
+
+Likely issue
+Few products clearly match “waterproof”.
+
+Recommendation
+→ Review availability of waterproof variants
+→ Create/merchandise a dedicated collection
+→ Consider adding relevant products
+
+Confidence: 87%
+</pre>
+<p>The assignment requires a functional, executable output rather than a static deck or unexecuted specification. fileciteturn0file0L7-L14</p>
+</div>
+
+<h2>8. Defensibility</h2>
+<table>
+<tr><th>Potential moat</th><th>Why it matters</th><th>Technical implication</th></tr>
+<tr><td>Explicit intent graph</td><td>Wishlist, save-for-later and back-in-stock actions are stronger declared signals than passive browsing alone.</td><td>Normalize events into a common intent model across merchants.</td></tr>
+<tr><td>Cross-store intelligence</td><td>Patterns across many stores could reveal emerging demand that a single store cannot see.</td><td>Privacy-safe aggregation, cohorting and anonymization.</td></tr>
+<tr><td>Action/outcome feedback loop</td><td>Recommendations become more useful when Swym Beacon observes whether merchant actions worked.</td><td>Recommendation IDs, experiments, outcome attribution and model evaluation.</td></tr>
+<tr><td>Workflow integration</td><td>Insight becomes valuable when it can trigger real merchant actions.</td><td>Shopify Flow / marketing / inventory workflow integrations.</td></tr>
+</table>
+
+<div class="callout"><strong>Strategic answer:</strong> the AI interface itself is not defensible. Shopify and other platforms can reproduce an LLM-powered merchant assistant. The defensible layer is the proprietary intent data, intent taxonomy, outcome history and embedded merchant workflows.</div>
+
+<h2>9. Architecture hypothesis</h2>
+<div class="flow">
+<div class="node">Event ingestion<br><small>wishlist / save / BIS / purchase</small></div><div class="arrow">→</div>
+<div class="node">Intent model<br><small>identity + product + time</small></div><div class="arrow">→</div>
+<div class="node">Feature layer<br><small>demand / growth / confidence</small></div><div class="arrow">→</div>
+<div class="node">Reasoning layer<br><small>rules + ML + LLM</small></div><div class="arrow">→</div>
+<div class="node">Merchant actions<br><small>recommend / trigger / explain</small></div>
+</div>
+<div class="grid">
+<div class="card"><h3>Keep deterministic where possible</h3><p>Metrics, aggregation, ranking, thresholds and business calculations should come from structured systems. The LLM should not be the source of truth for numeric facts.</p></div>
+<div class="card"><h3>Use the LLM for reasoning & interface</h3><p>Translate natural-language questions into structured queries, synthesize evidence, explain recommendations and ask clarifying questions when needed.</p></div>
+</div>
+
+<h2>10. Failure modes & safeguards</h2>
+<table>
+<tr><th>Failure mode</th><th>Safeguard</th></tr>
+<tr><td>Low-volume data produces noisy recommendations</td><td>Minimum sample sizes, confidence intervals and “insufficient evidence” states.</td></tr>
+<tr><td>Seasonality mistaken for emerging demand</td><td>Compare against historical baselines and relevant cohorts.</td></tr>
+<tr><td>LLM invents metrics or reasons</td><td>Ground responses in typed tool outputs; cite underlying signals inside the product.</td></tr>
+<tr><td>Recommendation ignores inventory/margin</td><td>Join intent with business context before ranking actions.</td></tr>
+<tr><td>Cross-store leakage / privacy concerns</td><td>Strict tenant isolation; only use privacy-safe aggregate patterns for network intelligence.</td></tr>
+<tr><td>Merchant over-trusts AI</td><td>Confidence, evidence, rationale and reversible actions; never hide uncertainty.</td></tr>
+<tr><td>50,000-store scale creates expensive inference</td><td>Precompute aggregates/features; use event-driven pipelines; reserve LLM calls for user-facing reasoning.</td></tr>
+</table>
+
+<h2>11. Product roadmap logic</h2>
+<div class="grid">
+<div class="card"><h3>Phase 1 — Explain demand</h3><p>Rank intent opportunities: rising demand, unmet demand, high-interest/low-conversion products and variant-level demand.</p></div>
+<div class="card"><h3>Phase 2 — Recommend actions</h3><p>Translate opportunities into restock, merchandising, campaign and catalog recommendations with evidence.</p></div>
+<div class="card"><h3>Phase 3 — Close the loop</h3><p>Track merchant actions and outcomes. Learn which recommendations actually create incremental revenue.</p></div>
+<div class="card"><h3>Phase 4 — Proactive Swym Beacon</h3><p>Instead of waiting for questions, surface the highest-value opportunity each day/week with confidence and expected impact.</p></div>
+</div>
+
+<h2>12. Questions I would take to the technical discussion</h2>
+<ul>
+<li>What intent signals does Swym have at event, shopper, product and variant level today?</li>
+<li>Can Swym Beacon access historical events, or only newly generated signals?</li>
+<li>What is the canonical event/identity model across Swym products?</li>
+<li>How should anonymous and known shoppers be represented without compromising privacy?</li>
+<li>Which recommendations can be validated against historical outcomes?</li>
+<li>What merchant actions can Swym Beacon execute today versus only recommend?</li>
+<li>What is the acceptable latency: real-time, hourly, daily, or weekly?</li>
+<li>How do we evaluate recommendation quality across 50,000 stores?</li>
+</ul>
+
+<h2>13. Bottom line</h2>
+<div class="quote">The winning Swym Beacon story is not “Swym adds AI.” It is “Swym owns a uniquely valuable layer of explicit shopper intent and turns that signal into merchant intelligence and measurable action.”</div>
+
+<div class="footer">
+<p><b>Source basis:</b> Swym Beacon Product Builder assignment provided by the candidate. The assignment defines Swym Beacon as Swym's merchant intelligence layer and requires executable work, architecture/failure-mode analysis, defensibility analysis, and product discovery/prioritization. fileciteturn0file0L2-L6 fileciteturn0file0L22-L26</p>
+<p>External competitor references should be verified against current vendor documentation before final submission; this presentation distinguishes strategic positioning hypotheses from implementation facts.</p>
+</div>
+</div>
+</body>
+</html>
