@@ -75,6 +75,7 @@ Raw AI workflow evidence referenced by Part 1 (Q3) and Part 3 (Q7):
 | File | Tool | Covers |
 |---|---|---|
 | `Claude_Code_CHAT_TRANSCRIPT.md` | Claude Code | Full build transcript for the Part 1 diagnostic tool — the original prompt through Cloudflare/Playwright debugging to the final check-in |
+| `beacon_claude_transcript.docx` | Claude (claude.ai) | Exported transcript of [this Claude chat](https://claude.ai/share/3c6fc88e-ef6f-46ad-8c4f-9bddf9895ab6) — a separate conversation from the Claude Code build session above |
 | `Gemini - Nestasia E-commerce Pipeline Architecture.docx` | Gemini | Independent walkthrough of the Part 1 pipeline architecture and a first pass at Part 2 |
 | `Gemini - Part 2 Draft (Restock Scoring Alternative).md` | Gemini | An alternative Part 2 draft with a different restock-scoring model, kept for comparison |
 | `ChatGPT - Beacon_Competitor_Analysis_Technical.html` | ChatGPT | Competitive positioning analysis referenced while framing Part 2's defensibility argument |
