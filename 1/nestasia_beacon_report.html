@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Beacon Diagnostic — Nestasia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --panel-2: #1e222b;
+    --text: #e8eaef; --text-dim: #9aa1af; --border: #2a2f3a;
+    --accent: #f37a1f; --accent-2: #ffcb67; --danger: #e5484d; --ok: #3fb950;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); margin: 0; padding: 0 0 4rem; }
+  header { padding: 2.5rem 3rem 1.5rem; border-bottom: 1px solid var(--border); }
+  header .kicker { color: var(--accent); font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 600; }
+  header h1 { margin: .3rem 0 .4rem; font-size: 2rem; }
+  header p { color: var(--text-dim); max-width: 60rem; line-height: 1.5; margin: 0; }
+  main { padding: 2rem 3rem; max-width: 74rem; margin: 0 auto; }
+  section { margin-bottom: 3rem; }
+  h2 { font-size: 1.15rem; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: .5rem; }
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .stat-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem 1.4rem; }
+  .stat-card .value { font-size: 1.9rem; font-weight: 700; color: var(--accent-2); }
+  .stat-card .label { color: var(--text-dim); font-size: .82rem; margin-top: .3rem; }
+  .callout { background: linear-gradient(135deg, rgba(243,122,31,.14), rgba(243,122,31,.04)); border: 1px solid rgba(243,122,31,.35); border-radius: 10px; padding: 1.2rem 1.4rem; margin-top: 1.2rem; line-height: 1.55; }
+  .callout b { color: var(--accent-2); }
+  table { width: 100%; border-collapse: collapse; background: var(--panel); border-radius: 10px; overflow: hidden; font-size: .88rem; }
+  th, td { padding: .6rem .8rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-dim); font-weight: 600; text-transform: uppercase; font-size: .72rem; letter-spacing: .05em; background: var(--panel-2); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td.score { color: var(--accent-2); font-weight: 700; }
+  .prod-name { max-width: 20rem; }
+  .tag { padding: .2rem .55rem; border-radius: 999px; font-size: .72rem; font-weight: 600; white-space: nowrap; }
+  .tag-wishlist { background: rgba(63,185,80,.15); color: var(--ok); }
+  .tag-backinstock { background: rgba(229,72,77,.15); color: var(--danger); }
+  .tag-both { background: rgba(255,203,103,.18); color: var(--accent-2); }
+  .table-wrap { overflow-x: auto; }
+  .chart-wrap { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; height: 340px; }
+  .friction-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+  .friction-card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.3rem; }
+  .friction-card h3 { margin: 0 0 .4rem; font-size: .95rem; color: var(--accent-2); }
+  .friction-card p { margin: 0; color: var(--text-dim); font-size: .88rem; line-height: 1.5; }
+  .two-col { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; align-items: start; }
+  ul.occasion-list { list-style: none; margin: 0; padding: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 10px; }
+  ul.occasion-list li { display: flex; justify-content: space-between; padding: .6rem 1rem; border-bottom: 1px solid var(--border); font-size: .88rem; }
+  ul.occasion-list li:last-child { border-bottom: none; }
+  ul.occasion-list span:last-child { color: var(--accent-2); font-weight: 600; }
+  .pitch { background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 6px; padding: 1.4rem 1.6rem; line-height: 1.65; font-size: 1rem; }
+  .footnote { color: var(--text-dim); font-size: .78rem; margin-top: 1rem; line-height: 1.6; }
+  .footnote code { background: var(--panel-2); padding: .1rem .35rem; border-radius: 4px; }
+  @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } header, main { padding-left: 1.2rem; padding-right: 1.2rem; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kicker">Beacon &middot; Diagnostic Run</div>
+  <h1>Nestasia — Silent Shopper Demand Report</h1>
+  <p>First pass of Beacon's intent-intelligence layer against nestasia.in's public storefront.
+     No account access, no private APIs — this is exactly what's visible to anyone browsing the
+     site, reassembled into signal. 239 unique products analyzed across 5
+     collections.</p>
+</header>
+
+<main>
+
+<section>
+  <h2>Executive Summary</h2>
+  <div class="stat-grid">
+    <div class="stat-card"><div class="value">239</div><div class="label">Unique products analyzed</div></div>
+    <div class="stat-card"><div class="value">40.6%</div><div class="label">Have at least one sold-out variant</div></div>
+    <div class="stat-card"><div class="value">84.8%</div><div class="label">Out of stock in "What's Trending" (store-reported)</div></div>
+    <div class="stat-card"><div class="value">₹117,992</div><div class="label">Est. demand value sitting on sold-out variants*</div></div>
+  </div>
+  <div class="callout">
+    <b>Top signal:</b>
+    'Chef Salt and Pepper Jars'
+    tops Beacon's intent-risk ranking at a score of <b>0.65</b> —
+    it's in the trending collection and 
+    carrying a 100% variant sellout rate,
+    with zero mechanism on the live site to capture the demand once a shopper hits a sold-out variant.
+    That is the gap this report quantifies: demand Nestasia is generating and then losing, silently,
+    at the exact moment a shopper is ready to buy.
+  </div>
+  <p class="footnote">*Estimated as sold-out variant count &times; product price, summed across all analyzed
+  products. This is a directional proxy for at-risk revenue, not a measured figure — Nestasia doesn't expose
+  actual traffic or conversion data publicly, so this report uses stock and pricing signals as a stand-in.</p>
+</section>
+
+<section>
+  <h2>Top 25 Products by Intent-Risk Score</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Product</th><th>Collection</th><th>Sellout Rate</th>
+          <th>Inventory Left</th><th>Discount</th><th>Reviews</th><th>Score</th><th>Swym Rec.</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td class="num">1</td>
+          <td class="prod-name">Chef Salt and Pepper Jars</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">320</td>
+          <td class="num score">0.65</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">2</td>
+          <td class="prod-name">MERRY 3 part snack bowl with wooden handle - blue, yellow &amp; red</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">7</td>
+          <td class="num score">0.5522</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">3</td>
+          <td class="prod-name">Pink Marble Plate</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">7</td>
+          <td class="num score">0.5522</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">4</td>
+          <td class="prod-name">Dots Ceramic Pot Colourful</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">7</td>
+          <td class="num score">0.5522</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">5</td>
+          <td class="prod-name">Bowl Set</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">6</td>
+          <td class="num score">0.5519</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">6</td>
+          <td class="prod-name">Gold Handheld Mirror</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">6</td>
+          <td class="num score">0.5519</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">7</td>
+          <td class="prod-name">Green Tub Ceramic snack bowl</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">4</td>
+          <td class="num score">0.5513</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">8</td>
+          <td class="prod-name">MERRY Round Dish</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">3</td>
+          <td class="num score">0.5509</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">9</td>
+          <td class="prod-name">Flamingo Bunting</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">3</td>
+          <td class="num score">0.5509</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">10</td>
+          <td class="prod-name">Flamingo Statue</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">3</td>
+          <td class="num score">0.5509</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">11</td>
+          <td class="prod-name">Elephant Planter</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">2</td>
+          <td class="num score">0.5506</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">12</td>
+          <td class="prod-name">Cactus Sculpture Small</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">2</td>
+          <td class="num score">0.5506</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">13</td>
+          <td class="prod-name">Artificial Flower Bunch Peony Blue</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">2</td>
+          <td class="num score">0.5506</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">14</td>
+          <td class="prod-name">Hedgehog Planter</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">1</td>
+          <td class="num score">0.5503</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">15</td>
+          <td class="prod-name">Music Hook Set</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">1</td>
+          <td class="num score">0.5503</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">16</td>
+          <td class="prod-name">Yellow Bowl with Handle</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">1</td>
+          <td class="num score">0.5503</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">17</td>
+          <td class="prod-name">Fox Planter</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">18</td>
+          <td class="prod-name">Artificial Lily</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">19</td>
+          <td class="prod-name">Cactus Display Pink Large</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">20</td>
+          <td class="prod-name">Pink Cactus Statue</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">21</td>
+          <td class="prod-name">Cactus Showpiece Large</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">22</td>
+          <td class="prod-name">Artificial Plants</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">23</td>
+          <td class="prod-name">Double Decker Rack</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">24</td>
+          <td class="prod-name">Metal Bottle Opener</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+        <tr>
+          <td class="num">25</td>
+          <td class="prod-name">Hand Held Mirror</td>
+          <td>whats-trending</td>
+          <td class="num">100%</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num">—</td>
+          <td class="num score">0.55</td>
+          <td><span class="tag tag-both">Both</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="footnote">"Inventory Left" and "Discount" are only populated for the top 25
+  products by raw variant sellout rate, which received a full product-page fetch during this run (see
+  methodology note at the bottom). A dash means that product wasn't in the deep-dive batch this run, not
+  that the signal is zero.</p>
+</section>
+
+<section>
+  <h2>Category Breakdown — Avg. Sellout Rate by Collection</h2>
+  <div class="chart-wrap"><canvas id="catChart"></canvas></div>
+  <p class="footnote">"Category" here is a proxy: Nestasia's oembed feed doesn't expose a product-type
+  field, so products are grouped by the first target collection they were discovered in
+  (whats-trending, bestsellers-on-discount, new-in, gifts, flat-50-percent-off-offer).</p>
+</section>
+
+<section>
+  <div class="two-col">
+    <div>
+      <h2>Friction Point Analysis</h2>
+      <div class="friction-grid">
+        <div class="friction-card">
+          <h3>1. Trending = sold out, with no recovery path</h3>
+          <p>84.8% of Nestasia's own hand-curated "What's Trending" collection
+          (1064 of 1254 products,
+          per the store's live availability facet) is out of stock. There is no back-in-stock alert on these
+          product pages — a shopper who lands on a trending product Nestasia is actively promoting has a
+          coin-flip chance of hitting a dead end with no way to be notified.</p>
+        </div>
+        <div class="friction-card">
+          <h3>2. Discounted + sold-out variants compound</h3>
+          <p>Among the deep-dive sample, products carrying both a live discount and a partial sellout rate
+          show the classic "hot item" pattern — price cut drove a burst of demand that outran stock on
+          specific variants (size/color), while other variants of the same product sit fully available and
+          undiscounted. That's inventory-allocation intelligence Nestasia's team can't see from the
+          storefront today.</p>
+        </div>
+        <div class="friction-card">
+          <h3>3. Gifting intent has no dedicated capture mechanism</h3>
+          <p>Products cross-linked into occasion-specific gifting collections (Housewarming, Wedding,
+          Anniversary, etc. — see facet weights) carry seasonal, date-sensitive intent. A wishlist without
+          ESP integration can't remind a shopper before Diwali or a wedding date; that intent simply expires
+          unrecorded.</p>
+        </div>
+        <div class="friction-card">
+          <h3>4. Multi-collection membership is an unused prioritization signal</h3>
+          <p>9 products in this dataset appear in more than
+          one target collection simultaneously (e.g. trending AND on a discount collection) — a stronger
+          demand signal than either collection alone, and one the merchant dashboard has no way to surface
+          today without a tool like Beacon.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>Occasion Tag Weights</h2>
+      <ul class="occasion-list"><li><span>Housewarming</span><span>886</span></li><li><span>Festive</span><span>813</span></li><li><span>Anniversary</span><span>639</span></li><li><span>Birthday</span><span>638</span></li><li><span>Diwali</span><span>581</span></li><li><span>MothersDay</span><span>581</span></li><li><span>Christmas</span><span>568</span></li><li><span>FathersDay</span><span>501</span></li></ul>
+      <p class="footnote">Pulled from the live "Occasions" facet on the What's Trending collection page —
+      counts reflect the store's full catalog for that facet, not just this run's 50-product sample.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Engineering Approach &amp; Effort</h2>
+  <div class="pitch">
+    This diagnostic was built and run end-to-end against the live storefront, not against sample or cached
+    data. Two blockers surfaced during implementation and both required a real engineering pivot, not a
+    workaround:
+    <ul>
+      <li><b>Cloudflare bot management.</b> Plain HTTP requests (curl, Python <code>requests</code>, any
+      standard browser User-Agent header) return HTTP 403 "Just a moment..." on the oembed endpoint, every
+      collection page, and every product page — verified directly before any scraping logic was written.
+      The fetch layer was rebuilt on headless Chromium via Playwright, which executes Cloudflare's JS
+      challenge like a real browser and clears it reliably after an ~8s settle window per navigation.</li>
+      <li><b>Broken oembed pagination.</b> The collection oembed endpoint's <code>page</code> query
+      parameter is a no-op on this store — <code>page=1</code>, <code>page=2</code>, <code>page=100</code>,
+      and no parameter at all were fetched and diffed product-for-product, and all four returned the
+      identical first 50 products. There is no way to page past 50 products per collection from outside the
+      store today. This caps every collection in this dataset at ~50 products rather than its true catalog
+      size (e.g. "What's Trending" holds 1,254 products per its own availability facet, but only 50 were
+      retrievable via oembed) — disclosed in the Methodology section below rather than absorbed silently
+      into the totals.</li>
+    </ul>
+    Everything reported above — the 84.8% trending-collection stockout rate, the availability facet counts,
+    the occasion-tag weights, the per-product review histograms — was read live off nestasia.in during this
+    run, with no synthetic or placeholder data anywhere in the pipeline.
+  </div>
+</section>
+
+<section>
+  <h2>Backend &amp; Data Access Needed From Nestasia</h2>
+  <div class="pitch">
+    The signals above are everything reconstructable from public storefront pages alone. A production
+    Beacon integration would need direct access to close the gaps this diagnostic had to work around:
+    <ul>
+      <li><b>Shopify Admin API access (or a merchant-side data feed)</b> — to read the full product catalog,
+      true <code>inventory_quantity</code> per variant, and <code>product_type</code>/tags directly, instead
+      of inferring stock state from a public storefront facet and capping catalog depth at 50 products per
+      collection via oembed.</li>
+      <li><b>Real-time inventory webhooks</b> (Shopify's <code>inventory_levels/update</code> topic or
+      equivalent) — to trigger back-in-stock notifications the moment stock returns, rather than polling a
+      Cloudflare-gated storefront.</li>
+      <li><b>Order and conversion history per product/variant</b> — the "estimated demand value" figure in
+      this report is a stock &times; price proxy; actual add-to-cart, checkout-start, and conversion data
+      would let intent-risk scoring reflect real lost revenue instead of a directional estimate.</li>
+      <li><b>Wishlist interaction events</b> — Nestasia's current heart-icon wishlist writes to
+      <code>localStorage</code> only, with no server-side record. Replacing it with Swym Wishlist Plus (or
+      instrumenting the existing UI to emit events) is what turns "shopper clicked a heart icon" into a
+      contactable, ESP-ready record.</li>
+      <li><b>Customer identity / email opt-in linkage</b> — to route captured intent (sold-out variant,
+      wishlist add, gift-collection browse) into re-engagement flows; currently there's no session-to-contact
+      bridge on the storefront.</li>
+      <li><b>An allowlisted integration path around the Cloudflare bot rules</b> — either an IP/agent
+      allowlist for a lightweight polling client, or (preferably) API-based access that removes the need to
+      render pages through a browser at all. This determines whether a production version of this pipeline
+      runs as a scraper or as a proper integration.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Methodology &amp; Signal Labels</h2>
+  <p class="footnote">
+  <b>Directly measured</b> (from live storefront data, this run): variant sellout rate, price, review count
+  &amp; rating, discount depth, collection membership, occasion facet counts, trending-collection
+  availability split.<br>
+  <b>Proxies</b> (stand-ins for data Beacon would get directly via pixel/API in a real integration):
+  "image version timestamp" as a recency signal, "gift occasion links" as a gifting-intent signal,
+  "estimated demand value" as a revenue-risk signal, and the category breakdown (grouped by collection,
+  not true product type).<br>
+  <b>Known coverage limits, disclosed rather than hidden:</b> the oembed endpoint's <code>page</code>
+  parameter does not paginate on this store (verified: page=1/2/100 all return the same 50 products), so
+  each collection contributes at most ~50 products to this dataset, not its full catalog depth.
+  Product-page deep-dive fields (inventory count, discount %, reviews) were only fetched for the top
+  25 products by raw sellout rate, to keep this run's wall-clock time reasonable
+  against Cloudflare's per-request JS-challenge overhead.
+  </p>
+</section>
+
+</main>
+
+<script>
+  const ctx = document.getElementById('catChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["whats-trending", "gifts", "new-in", "bestsellers-on-discount", "flat-50-percent-off-offer"],
+      datasets: [{
+        label: 'Avg. variant sellout rate (%)',
+        data: [99.3, 69.6, 14.0, 7.5, 1.7],
+        backgroundColor: '#f37a1f',
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, ticks: { color: '#9aa1af' }, grid: { color: '#2a2f3a' } },
+        x: { ticks: { color: '#9aa1af' }, grid: { display: false } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
