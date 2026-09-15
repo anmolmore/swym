@@ -1,8 +1,7 @@
 # Swym Beacon Product Builder — Submission
 
-Response to `Beacon Product Builder Assignment.pdf` (included at the repo
-root). This file maps each numbered question in the assignment to where it's
-answered in this repo.
+Response to the Beacon Product Builder assignment brief. This file maps each
+numbered question in the assignment to where it's answered in this repo.
 
 ## Part 1: Build
 
@@ -85,7 +84,6 @@ Raw AI workflow evidence referenced by Part 1 (Q3) and Part 3 (Q7):
 
 ```
 .
-├── Beacon Product Builder Assignment.pdf   ← the assignment brief itself
 ├── README.md                               ← this file
 ├── Part 1 - Build/
 ├── Part 2 - Thought Process And Architecture.docx
