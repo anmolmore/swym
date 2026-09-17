@@ -78,7 +78,7 @@ Raw AI workflow evidence referenced by Part 1 (Q3) and Part 3 (Q7):
 | `Gemini - Nestasia E-commerce Pipeline Architecture.docx` | Gemini | Independent walkthrough of the Part 1 pipeline architecture and a first pass at Part 2 |
 | `Gemini - Part 2 Draft (Restock Scoring Alternative).md` | Gemini | An alternative Part 2 draft with a different restock-scoring model, kept for comparison |
 | `ChatGPT - Beacon_Competitor_Analysis_Technical.html` | ChatGPT | Competitive positioning analysis referenced while framing Part 2's defensibility argument |
-| *(file pending upload)* | ChatGPT | Exported transcript of [this ChatGPT chat](https://chatgpt.com/share/6aa94139-cb20-83ee-9432-6d0cc981c84c) — a separate conversation from the competitor-analysis session above |
+| `Swym_Beacon_Chat_History_Evaluation.docx` | ChatGPT | Standalone reconstruction of [this ChatGPT chat](https://chatgpt.com/share/6aa94139-cb20-83ee-9432-6d0cc981c84c)'s history (competitor analysis → HTML presentation build) — a separate conversation from the competitor-analysis session above, prepared for evaluation since ChatGPT's native export only supports full-account export |
 
 ## Repo structure
 
